@@ -15,6 +15,13 @@ h1, h2 {
   margin-bottom: 20px;
 }
 
+/* === Paragraph and Text Content === */
+p {
+  margin-bottom: 1.2em;
+  font-size: 1rem;
+  color: #f0f0f0;
+}
+
 /* === Tables === */
 table {
   width: 100%;
@@ -57,16 +64,25 @@ td a:visited {
   color: inherit;
 }
 
-/* === Paragraph and Text Content === */
-p {
-  margin-bottom: 1.2em;
-  font-size: 1rem;
-  color: #f0f0f0;
-}
-
-/* === Add subtle horizontal rule styling === */
+/* === Horizontal Rule Styling === */
 hr {
   border: none;
   border-top: 1px solid #4b4875;
   margin: 40px 0;
+}
+
+/* === Navbar Font Overrides === */
+/* Font for brand title (e.g., "Vaeloria Info Hub") */
+.navbar-brand {
+  font-family: 'Tagesschrift', system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Font for all navbar links and dropdown items */
+.navbar-nav .nav-link,
+.navbar-nav .dropdown-item {
+  font-family: 'Eagle Lake', serif;
+  font-weight: 400;
+  font-style: normal;
 }
