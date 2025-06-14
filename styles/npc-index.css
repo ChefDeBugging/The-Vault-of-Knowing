@@ -1,4 +1,4 @@
-.npc-ref-title {
+.npc-ref-title, .npc-title {
   font-family: "Eagle Lake", serif;
   font-weight: 400;
   font-style: normal;
@@ -12,6 +12,12 @@
 
 .npc-table {
   font-family: "Tagesschrift", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.npc-story {
+  font-family: "Just Another Hand", cursive;
   font-weight: 400;
   font-style: normal;
 }
