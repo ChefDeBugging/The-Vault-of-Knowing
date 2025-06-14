@@ -1,1 +1,17 @@
+.npc-ref-title {
+  font-family: "Eagle Lake", serif;
+  font-weight: 400;
+  font-style: normal;
+}
 
+.npc-ref-place {
+  font-family: "Bilbo Swash Caps", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.npc-table {
+  font-family: "Tagesschrift", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
