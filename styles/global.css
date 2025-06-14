@@ -75,13 +75,14 @@ hr {
 /* Font for brand title (e.g., "Vaeloria Info Hub") */
 .navbar-brand {
   font-family: 'Tangerine', cursive;
-  font-size: 2.5rem;         /* Make the font larger */
+  font-size: 2.5rem;
   font-weight: 400;
   font-style: normal;
-  line-height: 1;            /* Prevent vertical stretching */
-  padding-top: 0;            /* Reduce extra padding */
+  line-height: 1;
+  padding-top: 0;
   padding-bottom: 0;
-  vertical-align: middle;    /* Align the text nicely inside the navbar */
+  vertical-align: middle;
+  margin-left: -10px; /* 👈 move it left slightly */
 }
 
 /* Font for all navbar links and dropdown items */
