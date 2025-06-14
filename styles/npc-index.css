@@ -4,7 +4,7 @@
   font-style: normal;
 }
 
-.npc-ref-place, .npc-story p {
+.npc-ref-place {
   font-family: "Bilbo Swash Caps", cursive;
   font-weight: 400;
   font-style: normal;
@@ -15,3 +15,9 @@
   font-weight: 400;
   font-style: normal;
 }
+
+.npc-story p {
+  font-family: "Sue Ellen Francisco", cursive;
+  font-size: 1.5rem;
+  font-weight: 400;
+  font-style: normal;
