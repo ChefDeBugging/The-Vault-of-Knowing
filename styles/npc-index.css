@@ -4,7 +4,7 @@
   font-style: normal;
 }
 
-.npc-ref-place {
+.npc-ref-place, npc-story p {
   font-family: "Bilbo Swash Caps", cursive;
   font-weight: 400;
   font-style: normal;
@@ -12,13 +12,6 @@
 
 .npc-table {
   font-family: "Tagesschrift", system-ui;
-  font-weight: 400;
-  font-style: normal;
-}
-
-.npc-story p {
-  font-family: "Just Another Hand", cursive;
-  font-size: 1.5rem;
   font-weight: 400;
   font-style: normal;
 }
