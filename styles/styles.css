@@ -1,0 +1,72 @@
+/* === Global Body Style === */
+body {
+  background-color: #1e1e2f;
+  color: #f0f0f0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 20px;
+  line-height: 1.6;
+}
+
+/* === Headings === */
+h1, h2 {
+  color: #a1c4fd;
+  text-align: center;
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+
+/* === Tables === */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 40px;
+}
+
+th, td {
+  border: 1px solid #444;
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background-color: #29294d;
+}
+
+tr:nth-child(even) {
+  background-color: #2e2e42;
+}
+
+tr:hover {
+  background-color: #3a3a5c;
+}
+
+/* === Table Links === */
+td a {
+  color: inherit;
+  text-decoration: none;
+  font-weight: inherit;
+}
+
+td a:hover {
+  color: #ffffff;
+  text-shadow: 0 0 3px #ffffff44;
+  text-decoration: none;
+}
+
+td a:visited {
+  color: inherit;
+}
+
+/* === Paragraph and Text Content === */
+p {
+  margin-bottom: 1.2em;
+  font-size: 1rem;
+  color: #f0f0f0;
+}
+
+/* === Add subtle horizontal rule styling === */
+hr {
+  border: none;
+  border-top: 1px solid #4b4875;
+  margin: 40px 0;
+}
