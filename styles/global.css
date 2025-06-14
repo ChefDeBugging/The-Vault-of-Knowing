@@ -82,7 +82,7 @@ hr {
   padding-top: 0;
   padding-bottom: 0;
   vertical-align: middle;
-  margin-left: -10px; /* 👈 move it left slightly */
+  margin-left: -10px;
 }
 
 /* Font for all navbar links and dropdown items */
