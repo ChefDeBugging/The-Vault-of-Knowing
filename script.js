@@ -31,7 +31,7 @@ if (searchForm) {
     if (result) {
       window.location.href = result.path;
     } else {
-      alert("No NPC found by that name. Please check your spelling.");
+      alert("No Lore found by that name. Please check your spelling.");
     }
   });
 }
