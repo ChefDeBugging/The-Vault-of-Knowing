@@ -12,6 +12,13 @@ const npcPages = [
   { name: "Gravik Irontide", path: "/Vaeloria-Info-Hub/npc-index/npc-pages/empire-of-tides/gravik-irontide.html" },
   { name: "Fenra Veln", path: "/Vaeloria-Info-Hub/npc-index/npc-pages/empire-of-tides/fenra-veln.html" },
   { name: "Captain Maxwell", path: "/Vaeloria-Info-Hub/npc-index/npc-pages/empire-of-tides/captain-maxwell.html" },
+  { name: "Tolla Jinxfuse", path: "/Vaeloria-Info-Hub/npc-index/npc-pages/ember-desert/tolla-jinxfuse.html" },
+  { name: "Nirre Glintstream", path: "/Vaeloria-Info-Hub/npc-index/npc-pages/ember-desert/nirra-glintstream.html" },
+  { name: "Quen Maddrek", path: "/Vaeloria-Info-Hub/npc-index/npc-pages/ember-desert/quen-maddrek.html" },
+  { name: "Sazhra Dunewhisper", path: "/Vaeloria-Info-Hub/npc-index/npc-pages/ember-desert/sazhra-dunewhisper.html" },
+  { name: "Ragor Flintskin", path: "/Vaeloria-Info-Hub/npc-index/npc-pages/ember-desert/ragor-flintskin.html" },
+  { name: "Ilyen Starroot", path: "/Vaeloria-Info-Hub/npc-index/npc-pages/ember-desert/ilyen-starroot.html" },
+  { name: "Dren Volgar", path: "/Vaeloria-Info-Hub/npc-index/npc-pages/ember-desert/dren-volgar.html" },
 ];
 
 const searchForm = document.querySelector("form[role='search']");
