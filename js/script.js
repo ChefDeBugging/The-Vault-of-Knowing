@@ -24,7 +24,7 @@ const npcPages = [
   { name: "Dren Volgar", path: "npc-index/npc-pages/ember-desert/dren-volgar.html" },
   { name: "Basheera Venn", path: "npc-index/npc-pages/ember-desert/basheera-venn.html" },
   { name: "Khatir Solgrim", path: "npc-index/npc-pages/ember-desert/khatir-solgrim.html" },
-  { name: "Yanni The Ember Rat Kelso", path: "npc-index/npc-pages/ember-desert/yanni-kelso.html" },
+  { name: "Yanni Kelso", path: "npc-index/npc-pages/ember-desert/yanni-kelso.html" },
   { name: "Ora'ma Tal", path: "npc-index/npc-pages/ember-desert/orama-tal.html" },
   { name: "Hett Mosswick", path: "npc-index/npc-pages/eltoria/hett-mosswick.html" },
   { name: "Kess Tal'Ren", path: "npc-index/npc-pages/eltoria/kess-talren.html" },
