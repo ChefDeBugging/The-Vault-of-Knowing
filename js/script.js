@@ -51,6 +51,6 @@ searchForm.addEventListener("submit", function (event) {
   if (result) {
     window.location.href = result.path;
   } else {
-    alert("No NPC found by that name. Please check your spelling.");
+    alert("No lore found by that name. Please check your spelling.");
   }
 });
