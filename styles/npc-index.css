@@ -20,3 +20,8 @@
   font-family: "Tagesschrift", system-ui;
   font-weight: 400;
   font-style: normal;
+}
+
+td.nowrap {
+  white-space: nowrap;
+}
