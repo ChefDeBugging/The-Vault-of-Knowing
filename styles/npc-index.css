@@ -22,6 +22,6 @@
   font-style: normal;
 }
 
-td.nowrap {
+table td:nth-child(4) {
   white-space: nowrap;
 }
