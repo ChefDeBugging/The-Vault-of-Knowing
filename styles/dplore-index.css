@@ -1,0 +1,45 @@
+p {
+    font-family: "Tagesschrift", system-ui;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.lore-title {
+    font-family: "Bilbo Swash Caps", cursive;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 4rem;
+    margin-bottom: 5px;
+}
+
+.lore-subtitle {
+    font-family: "Bilbo Swash Caps", cursive;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 2.3rem;
+    margin-top: 5px;
+}
+
+
+.accordion-button {
+    background-color: #282842;
+    color: #a1c4fd;
+    
+}
+
+.accordion-body {
+    background-color: #151520;
+}
+
+.accordion-item {
+    border: none;
+}
+
+.accordion-button {
+    transition: none;
+    border: none;
+    font-family: "Eagle Lake", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
