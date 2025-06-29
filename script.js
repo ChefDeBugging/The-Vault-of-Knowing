@@ -66,3 +66,17 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  document
+    .querySelectorAll('#accordionExample .accordion-collapse')
+    .forEach(collapseEl => {
+      collapseEl.addEventListener('shown.bs.collapse', function () {
+        console.log('Accordion opened:', this.id); // <– debug message
+
+        const header = this.previousElementSibling;
+        const y = header.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      });
+    });
+});
