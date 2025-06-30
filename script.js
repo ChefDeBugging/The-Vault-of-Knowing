@@ -23,6 +23,7 @@ const searchIndex = [
   { name: "Basheera Venn", type: "npc", path: "npc-index/npc-pages/ember-desert/basheera-venn.html" },
   { name: "Khatir Solgrim", type: "npc", path: "npc-index/npc-pages/ember-desert/khatir-solgrim.html" },
   { name: "Yanni Kelso", type: "npc", path: "npc-index/npc-pages/ember-desert/yanni-kelso.html" },
+  { name: "The Ember Rat", type: "npc", path: "npc-index/npc-pages/ember-desert/yanni-kelso.html" },
   { name: "Orama Tal", type: "npc", path: "npc-index/npc-pages/ember-desert/orama-tal.html" },
   { name: "Hett Mosswick", type: "npc", path: "npc-index/npc-pages/eltoria/hett-mosswick.html" },
   { name: "Kess TalRen", type: "npc", path: "npc-index/npc-pages/eltoria/kess-talren.html" },
@@ -30,6 +31,19 @@ const searchIndex = [
   { name: "Vess Talorin", type: "npc", path: "npc-index/npc-pages/eldara/vess-talorin.html" },
   { name: "Brenn Talveth", type: "npc", path: "npc-index/npc-pages/eldara/brenn-talveth.html" },
   { name: "Lira Solmere", type: "npc", path: "npc-index/npc-pages/eldara/lira-solmere.html" },
+  { name: "Mazrik Vallo", type: "npc", path: "npc-index/npc-pages/trade-cities/mazrik-vallo.html" },
+  { name: "The Coin", type: "npc", path: "npc-index/npc-pages/trade-cities/mazrik-vallo.html" },
+  { name: "Shae Grindlehook", type: "npc", path: "npc-index/npc-pages/trade-cities/shae-grindlehook.html" },
+  { name: "Mirek Vance", type: "npc", path: "npc-index/npc-pages/trade-cities/mirek-vance.html" },
+  { name: "Corren Vox", type: "npc", path: "npc-index/npc-pages/trade-cities/corren-vox.html" },
+  { name: "Korran Dirge", type: "npc", path: "npc-index/npc-pages/trade-cities/korran-dirge.html" },
+  { name: "Tarnel Verin", type: "npc", path: "npc-index/npc-pages/trade-cities/tarnel-verin.html" },
+  { name: "Ilvara Sunsheen", type: "npc", path: "npc-index/npc-pages/unknown-wandering/ilvara-sunsheen.html" },
+  { name: "Torak the Blue", type: "npc", path: "npc-index/npc-pages/unknown-wandering/torak-the-blue.html" },
+  { name: "Malric Gorr", type: "npc", path: "npc-index/npc-pages/unknown-wandering/malric-gorr.html" },
+  { name: "Three Tooth", type: "npc", path: "npc-index/npc-pages/unknown-wandering/malric-gorr.html" },
+  { name: "Three-Tooth", type: "npc", path: "npc-index/npc-pages/unknown-wandering/malric-gorr.html" },
+  { name: "Arvyn Drehl", type: "npc", path: "npc-index/npc-pages/unknown-wandering/arvyn-drehl.html" },
   // Books, Journals, Notes
 
   // Locations
@@ -37,7 +51,18 @@ const searchIndex = [
   // Crafting
 
   // Lore
-  
+  { name: "The War of the Dead", type: "war", path: "deeper-lore-index/wars/ember-desert/ember-wars.html#war-of-dead" },
+  { name: "The Fractured Arcanum", type: "war", path: "deeper-lore-index/wars/ember-desert/ember-wars.html#fractured-arcanum" },
+  { name: "The Red Tide", type: "war", path: "deeper-lore-index/wars/empire-of-tides/empire-wars.html#red-tide" },
+  { name: "The Sundering of the Heavens", type: "war", path: "deeper-lore-index/wars/ironwood/ironwood-wars.html#sundering-heavens" },
+  { name: "The War of Chains", type: "war", path: "deeper-lore-index/wars/ironwood/ironwood-wars.html#war-of-chains" },
+  { name: "The Shattered Arcana", type: "war", path: "deeper-lore-index/wars/ironwood/ironwood-wars.html#shattered-arcana" },
+  { name: "The Shadow Fell", type: "war", path: "deeper-lore-index/wars/twilight-isles/twilight-wars.html#shadow-fell" },
+  { name: "Ashes of Divinity", type: "lore", path: "deeper-lore-index/creation/creation.html" },
+  { name: "Creation", type: "lore", path: "deeper-lore-index/creation/creation.html" },
+  { name: "The Chronicle of Ages", type: "lore", path: "deeper-lore-index/history/history.html" },
+  { name: "History", type: "lore", path: "deeper-lore-index/history/history.html" },
+  { name: "Deeper Lore" , type: "lore", path: "deeper-lore-index/dplore-index.html" },
   // Maps
 
   // Players
