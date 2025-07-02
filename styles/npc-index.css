@@ -112,3 +112,13 @@ table td:nth-child(4) {
 .npc-table tr:nth-child(odd) {
   background-color: rgba(20, 20, 30, 0.3) !important;
 }
+
+.npc-table a {
+  text-decoration: none;
+  color: inherit; /* Optional: match text color to surrounding text */
+}
+
+.npc-table a:hover {
+  text-decoration: underline; /* Optional: only underline on hover */
+  color: #f5f5f5; /* Optional: change color on hover */
+}
