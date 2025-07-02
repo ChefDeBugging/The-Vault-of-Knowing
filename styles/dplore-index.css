@@ -15,6 +15,7 @@ p {
 .accordion-section-wars {
     background: linear-gradient(rgba(10, 10, 15, 0.3), rgba(10, 10, 15, 0.4)), url('../images/battlefield.png') top center no-repeat;
     background-attachment: fixed;
+    background-size: cover;
     padding: 2rem;
     min-height: 100vh;
 }
