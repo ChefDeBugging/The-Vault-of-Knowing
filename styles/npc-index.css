@@ -2,6 +2,7 @@
   font-family: "Eagle Lake", serif;
   font-weight: 400;
   font-style: normal;
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
 }
 
 .npc-ref-place {
@@ -20,8 +21,94 @@
   font-family: "Tagesschrift", system-ui;
   font-weight: 400;
   font-style: normal;
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
 }
 
 table td:nth-child(4) {
   white-space: nowrap;
+}
+
+.npc-section {
+  background: linear-gradient(rgba(10, 10, 15, 0.4), rgba(10, 10, 15, 0.6)), url('../images/npc1.jpg') no-repeat fixed;
+  background-size: cover;
+  background-position: 50% 25%;
+  padding: 40px 20px;
+  color: #f5f5f5;
+}
+
+
+.npc-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: transparent;
+  color: #f5f5f5;
+}
+
+.npc-table th,
+.npc-table td {
+  background-color: rgba(20, 20, 30, 0.3); /* semi-transparent background for contrast */
+  border: none;
+  padding: 10px;
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
+}
+
+.npc-table th {
+  font-weight: bold;
+  color: #ddd;
+}
+
+.npc-table a {
+  color: #aad4ff;
+  text-decoration: underline;
+}
+
+.npc-ref-title,
+.npc-ref-place {
+  color: #f5f5f5;
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
+}
+
+.npc-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: transparent;
+  color: #f5f5f5;
+}
+
+.npc-table th,
+.npc-table td {
+  background-color: rgba(20, 20, 30, 0.3); /* semi-transparent background for contrast */
+  border: none;
+  padding: 10px;
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
+}
+
+.npc-table th {
+  font-weight: bold;
+  color: #ddd;
+}
+
+.npc-table a {
+  color: #aad4ff;
+  text-decoration: underline;
+}
+
+.npc-ref-title,
+.npc-ref-place {
+  color: #f5f5f5;
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
+}
+
+.npc-table th,
+.npc-table td {
+  border-radius: 4px;
+}
+
+.npc-table tr:not(:last-child) {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.npc-table tr:nth-child(even),
+.npc-table tr:nth-child(odd) {
+  background-color: rgba(20, 20, 30, 0.3) !important;
 }
