@@ -136,3 +136,30 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+  let currentSpread = 1;
+  const totalSpreads = 3;
+
+  function showSpread(num) {
+    for (let i = 1; i <= totalSpreads; i++) {
+      const spread = document.getElementById(`spread${i}`);
+      if (i === num) {
+        spread.classList.add('active');
+      } else {
+        spread.classList.remove('active');
+      }
+    }
+  }
+
+  function nextSpread() {
+    if (currentSpread < totalSpreads) {
+      currentSpread++;
+      showSpread(currentSpread);
+    }
+  }
+
+  function prevSpread() {
+    if (currentSpread > 1) {
+      currentSpread--;
+      showSpread(currentSpread);
+    }
+  }
