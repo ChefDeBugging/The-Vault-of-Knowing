@@ -133,30 +133,53 @@ const searchIndex = [
   }
 })();
 
-
 (function () {
-  // 1) Ensure a <base> so relative paths resolve from the site root (or /REPO/ on GH Pages).
+  // 1) Figure out the correct site base.
+  function computeSiteBase() {
+    // If you explicitly set <base>, trust it.
+    const explicit = document.querySelector('base')?.getAttribute('href');
+    if (explicit) {
+      try { return new URL(explicit, location.origin).pathname.replace(/\/?$/, '/'); }
+      catch { /* fall through */ }
+    }
+
+    // Otherwise, derive from THIS script's src (most reliable on GH Pages).
+    const thisScript = document.currentScript || (function () {
+      const scripts = document.getElementsByTagName('script');
+      return scripts[scripts.length - 1];
+    })();
+
+    try {
+      const u = new URL(thisScript.src, location.origin);
+      const parts = u.pathname.split('/').filter(Boolean);
+
+      // On GH Pages project sites, script path looks like: /REPO/assets/site.js
+      // On user/custom domain sites, it looks like: /assets/site.js
+      if (location.hostname.endsWith('github.io') && parts.length >= 2) {
+        // Treat the first segment as the repo name
+        return `/${parts[0]}/`;
+      }
+      // Otherwise, root
+      return '/';
+    } catch {
+      return '/';
+    }
+  }
+
+  const SITE_BASE = computeSiteBase();              // e.g., "/REPO/" or "/"
+  const ORIGIN_BASE = location.origin + SITE_BASE;  // full base URL
+
+  // 2) Ensure a <base> tag so all relative paths resolve consistently.
   (function ensureBaseTag() {
     let base = document.querySelector('base');
     if (!base) {
       base = document.createElement('base');
       document.head.prepend(base);
     }
-    const parts = location.pathname.split('/').filter(Boolean);
-    // project site: https://user.github.io/REPO/...  -> "/REPO/"
-    // user/custom-domain root:                       -> "/"
-    const href =
-      location.hostname.endsWith('github.io') && parts.length
-        ? `/${parts[0]}/`
-        : '/';
-    base.setAttribute('href', href);
+    base.setAttribute('href', SITE_BASE);
   })();
 
-  // 2) Compute bases once.
-  const BASE_HREF = (document.querySelector('base')?.getAttribute('href') || '/').replace(/\/?$/, '/'); // ensure trailing /
-  const ORIGIN_BASE = location.origin + BASE_HREF;
-
-  // 3) Utility: decide if a link is internal and should be normalized.
+  // 3) Helpers to detect and normalize internal links.
   function isInternal(href) {
     if (!href) return false;
     if (href.startsWith('#')) return false;
@@ -165,45 +188,53 @@ const searchIndex = [
       try { return new URL(href).origin === location.origin; }
       catch { return false; }
     }
-    return true; // relative or root-like → internal
+    return true;
   }
 
-  // 4) Normalize any relative/root-like href to an absolute, project-safe URL.
   function normalizeHref(raw) {
     if (!raw) return raw;
-    // Leading slash would otherwise go to domain root; map to project root instead.
-    if (raw.startsWith('/')) return new URL(raw.slice(1), ORIGIN_BASE).href;
-    // Resolve ./ and ../ (and plain relative) against project base.
+    // Map domain-root hrefs ("/...") to project root ("/REPO/...") on GH Pages.
+    if (raw === '/' || raw === './' || raw === './index.html') {
+      // Home variants → project root
+      return ORIGIN_BASE;
+    }
+    if (raw.startsWith('/')) {
+      return new URL(raw.slice(1), ORIGIN_BASE).href;
+    }
+    // Resolve "./", "../", and plain relative paths against project base.
     return new URL(raw, ORIGIN_BASE).href;
   }
 
-  // 5) Normalize all anchors currently in DOM.
   function normalizeAllAnchors(root = document) {
     root.querySelectorAll?.('a[href]').forEach(a => {
-      const original = a.getAttribute('href'); // attribute value (not resolved)
+      const original = a.getAttribute('href'); // attribute value
       if (!isInternal(original)) return;
+
       const fixed = normalizeHref(original);
-      if (fixed) a.setAttribute('href', fixed);
+      // Only set if it actually changes the resolved destination
+      if (fixed && a.href !== fixed) a.setAttribute('href', fixed);
     });
   }
 
-  // 6) Observe for late-added dropdown items / components.
-  const observer = new MutationObserver((muts) => {
-    for (const m of muts) {
-      if (m.type === 'childList') {
-        m.addedNodes.forEach(node => {
-          if (node.nodeType === 1) normalizeAllAnchors(node);
-        });
-      } else if (m.type === 'attributes' && m.attributeName === 'href' && m.target.tagName === 'A') {
-        const a = m.target;
-        const original = a.getAttribute('href');
-        if (isInternal(original)) a.setAttribute('href', normalizeHref(original));
-      }
-    }
-  });
-
+  // 4) Run now and observe for late-added dropdown items.
   function init() {
     normalizeAllAnchors(document);
+    const observer = new MutationObserver(muts => {
+      for (const m of muts) {
+        if (m.type === 'childList') {
+          m.addedNodes.forEach(node => {
+            if (node.nodeType === 1) normalizeAllAnchors(node);
+          });
+        } else if (m.type === 'attributes' && m.attributeName === 'href' && m.target.tagName === 'A') {
+          const a = m.target;
+          const original = a.getAttribute('href');
+          if (isInternal(original)) {
+            const fixed = normalizeHref(original);
+            if (fixed && a.href !== fixed) a.setAttribute('href', fixed);
+          }
+        }
+      }
+    });
     observer.observe(document.documentElement, {
       childList: true,
       subtree: true,
@@ -218,12 +249,11 @@ const searchIndex = [
     init();
   }
 
-  // 7) Optional: JS navigation helper for onclick handlers, etc.
+  // 5) Optional: JS navigation helper
   window.goto = function (path) {
     location.href = normalizeHref(path);
   };
 })();
-
 
 
 document.addEventListener('DOMContentLoaded', () => {
