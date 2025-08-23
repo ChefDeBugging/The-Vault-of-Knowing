@@ -49,7 +49,7 @@ const searchIndex = [
   // Locations
 
   // Crafting
-
+  { name: "Alchemy", type: "crafting", path: "crafting/alchemy-index/alchemy-index.html" },
   // Lore
   { name: "The War of the Dead", type: "war", path: "deeper-lore-index/wars/ember-desert/ember-wars.html#war-of-dead" },
   { name: "The Fractured Arcanum", type: "war", path: "deeper-lore-index/wars/ember-desert/ember-wars.html#fractured-arcanum" },
