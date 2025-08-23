@@ -1,0 +1,95 @@
+.alchemy-section {
+    background: linear-gradient(rgba(10, 10, 15, 0.4), rgba(10, 10, 15, 0.6)), url('../images/alchemy-background.png') no-repeat fixed;
+  background-size: cover;
+  background-position: 50% 25%;
+  padding: 40px 20px;
+  color: #f5f5f5;
+}
+
+
+.alchemy-title {
+    font-family: "Eagle Lake", serif;
+  font-weight: 400;
+  font-style: normal;
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
+}
+
+.alchemy-table {
+    font-family: "Tagesschrift", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+
+table td:nth-child(4) {
+  white-space: nowrap;
+}
+
+.alchemy-table {
+    width: 100%;
+  border-collapse: collapse;
+  background-color: transparent;
+  color: #f5f5f5;
+}
+
+.alchemy-table th,
+.alchemy-table td {
+  background-color: rgba(20, 20, 30, 0.3); /* semi-transparent background for contrast */
+  border: none;
+  padding: 10px;
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
+  border-radius: 4px; /* Optional: rounded corners for a softer look */
+}
+
+.alchemy-table th {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ddd;
+}
+
+.alchemy-table a {
+  color: #aad4ff;
+  text-decoration: underline;
+}
+
+.alchemy-table tr:not(:last-child) {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.alchemy-table tr:nth-child(even),
+.alchemy-table tr:nth-child(odd) {
+  background-color: rgba(20, 20, 30, 0.3) !important;
+}
+
+.alchemy-table a {
+  text-decoration: none;
+  color: inherit; /* Optional: match text color to surrounding text */
+}
+
+.alchemy-table a:hover {
+  text-decoration: underline; /* Optional: only underline on hover */
+  color: #f5f5f5; /* Optional: change color on hover */
+}
+
+th.poison, td.poison {
+    background-color: #ff000067;
+}
+
+th.potion, td.potion {
+    background-color: #00ff0055;
+}
+
+td.uncommon {
+    background-color: #026b0191;
+}
+
+td.rare {
+    background-color: #00e1ff88;
+}
+
+td.very-rare {
+    background-color: #5d00ff96;
+}
+
+td.legendary {
+    background-color: #ffd900aa;
+}
