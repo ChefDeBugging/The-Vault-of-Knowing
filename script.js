@@ -134,6 +134,97 @@ const searchIndex = [
 })();
 
 
+(function () {
+  // 1) Ensure a <base> so relative paths resolve from the site root (or /REPO/ on GH Pages).
+  (function ensureBaseTag() {
+    let base = document.querySelector('base');
+    if (!base) {
+      base = document.createElement('base');
+      document.head.prepend(base);
+    }
+    const parts = location.pathname.split('/').filter(Boolean);
+    // project site: https://user.github.io/REPO/...  -> "/REPO/"
+    // user/custom-domain root:                       -> "/"
+    const href =
+      location.hostname.endsWith('github.io') && parts.length
+        ? `/${parts[0]}/`
+        : '/';
+    base.setAttribute('href', href);
+  })();
+
+  // 2) Compute bases once.
+  const BASE_HREF = (document.querySelector('base')?.getAttribute('href') || '/').replace(/\/?$/, '/'); // ensure trailing /
+  const ORIGIN_BASE = location.origin + BASE_HREF;
+
+  // 3) Utility: decide if a link is internal and should be normalized.
+  function isInternal(href) {
+    if (!href) return false;
+    if (href.startsWith('#')) return false;
+    if (/^(mailto:|tel:|javascript:)/i.test(href)) return false;
+    if (/^https?:\/\//i.test(href)) {
+      try { return new URL(href).origin === location.origin; }
+      catch { return false; }
+    }
+    return true; // relative or root-like → internal
+  }
+
+  // 4) Normalize any relative/root-like href to an absolute, project-safe URL.
+  function normalizeHref(raw) {
+    if (!raw) return raw;
+    // Leading slash would otherwise go to domain root; map to project root instead.
+    if (raw.startsWith('/')) return new URL(raw.slice(1), ORIGIN_BASE).href;
+    // Resolve ./ and ../ (and plain relative) against project base.
+    return new URL(raw, ORIGIN_BASE).href;
+  }
+
+  // 5) Normalize all anchors currently in DOM.
+  function normalizeAllAnchors(root = document) {
+    root.querySelectorAll?.('a[href]').forEach(a => {
+      const original = a.getAttribute('href'); // attribute value (not resolved)
+      if (!isInternal(original)) return;
+      const fixed = normalizeHref(original);
+      if (fixed) a.setAttribute('href', fixed);
+    });
+  }
+
+  // 6) Observe for late-added dropdown items / components.
+  const observer = new MutationObserver((muts) => {
+    for (const m of muts) {
+      if (m.type === 'childList') {
+        m.addedNodes.forEach(node => {
+          if (node.nodeType === 1) normalizeAllAnchors(node);
+        });
+      } else if (m.type === 'attributes' && m.attributeName === 'href' && m.target.tagName === 'A') {
+        const a = m.target;
+        const original = a.getAttribute('href');
+        if (isInternal(original)) a.setAttribute('href', normalizeHref(original));
+      }
+    }
+  });
+
+  function init() {
+    normalizeAllAnchors(document);
+    observer.observe(document.documentElement, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['href'],
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  // 7) Optional: JS navigation helper for onclick handlers, etc.
+  window.goto = function (path) {
+    location.href = normalizeHref(path);
+  };
+})();
+
+
 
 document.addEventListener('DOMContentLoaded', () => {
   // Smooth scroll to opened accordion
