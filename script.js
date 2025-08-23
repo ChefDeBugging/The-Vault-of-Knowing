@@ -133,7 +133,130 @@ const searchIndex = [
   }
 })();
 
+(function () {
+  // 0) Optional override: set window.__BASE_PATH__ = "/YourRepo/" if you want to hardcode it.
+  function ensureTrailingSlash(p){return p.endsWith("/")?p:p+"/";}
+  function stripSlashes(p){return p.replace(/^\/+|\/+$/g,"");}
 
+  // 1) Compute base path ("/REPO/" on GH Pages project sites; "/" elsewhere)
+  function computeBasePath(){
+    if(typeof window.__BASE_PATH__==="string") return ensureTrailingSlash(window.__BASE_PATH__);
+    const host=location.hostname;
+    const parts=location.pathname.split("/").filter(Boolean);
+    if(host.endsWith("github.io") && parts.length>0){ return `/${parts[0]}/`; }
+    return "/";
+  }
+  const BASE_PATH = computeBasePath();                 // e.g. "/MyRepo/" or "/"
+  const BASE_PARTS = stripSlashes(BASE_PATH).split("/").filter(Boolean); // ["MyRepo"] or []
+  const ORIGIN = location.origin;
+
+  // 2) Helpers
+  function isInternalHref(href){
+    if(!href) return false;
+    if(href.startsWith("#")) return false;
+    if(/^(mailto:|tel:|javascript:)/i.test(href)) return false;
+    if(/^https?:\/\//i.test(href)) return false; // leave absolute URLs alone
+    return true;
+  }
+
+  // Merge path segments but CLAMP so we never go above BASE_PATH
+  function clampJoin(relative){
+    // separate query/hash
+    let path=relative, q="", h="";
+    const hashIdx=path.indexOf("#"); if(hashIdx>=0){ h=path.slice(hashIdx); path=path.slice(0,hashIdx); }
+    const qIdx=path.indexOf("?"); if(qIdx>=0){ q=path.slice(qIdx); path=path.slice(0,qIdx); }
+
+    // Home-ish cases
+    if(path==="" || path==="." || path==="index.html" || path==="./" || path==="./index.html"){ 
+      return ORIGIN + BASE_PATH; 
+    }
+
+    // Leading slash → map under repo root
+    if(path.startsWith("/")){
+      const joined = "/" + stripSlashes(BASE_PATH) + "/" + stripSlashes(path);
+      return ORIGIN + ensureTrailingSlash(joined).replace(/\/+$/,"") + q + h;
+    }
+
+    // Relative path: clamp traversal
+    const stack = BASE_PARTS.slice(); // start at repo root (["MyRepo"] or [])
+    const segs = path.split("/");
+
+    for(const seg of segs){
+      if(seg==="" || seg===".") continue;
+      if(seg===".."){
+        if(stack.length>BASE_PARTS.length){ stack.pop(); } // pop only if we’re deeper than repo root
+        // else ignore extra ".." to clamp at repo root
+      }else{
+        stack.push(seg);
+      }
+    }
+
+    const joined = "/" + stack.join("/");
+    return ORIGIN + joined + q + h;
+  }
+
+  function normalizeAnchors(root=document){
+    root.querySelectorAll?.('a[href]').forEach(a=>{
+      const raw = a.getAttribute('href');
+      if(!isInternalHref(raw)) return;
+      const fixed = clampJoin(raw);
+      if(fixed && a.href !== fixed) a.setAttribute('href', fixed);
+    });
+  }
+
+  function observeLateAdds(){
+    const mo = new MutationObserver(muts=>{
+      for(const m of muts){
+        if(m.type==="childList"){
+          m.addedNodes.forEach(node=>{
+            if(node.nodeType===1) normalizeAnchors(node);
+          });
+        }else if(m.type==="attributes" && m.attributeName==="href" && m.target.tagName==="A"){
+          const a=m.target, raw=a.getAttribute('href');
+          if(isInternalHref(raw)){
+            const fixed=clampJoin(raw);
+            if(fixed && a.href!==fixed) a.setAttribute('href', fixed);
+          }
+        }
+      }
+    });
+    mo.observe(document.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:["href"]});
+  }
+
+  // Patch search redirect (uses global searchIndex you already have)
+  function patchSearch(){
+    const form=document.querySelector("form[role='search']");
+    if(!form) return;
+    const input=form.querySelector("input[type='search']");
+    if(!input) return;
+
+    form.addEventListener("submit",function(e){
+      e.preventDefault();
+      const q=(input.value||"").trim().toLowerCase();
+      if(!q || !Array.isArray(window.searchIndex)) return;
+
+      const matches=window.searchIndex.filter(({name})=>String(name).toLowerCase().includes(q));
+      if(matches.length===1){
+        location.href = clampJoin(matches[0].path);
+      }else if(matches.length>1){
+        const grouped=matches.reduce((acc,it)=>((acc[it.type]??=[]).push(it.name),acc),{});
+        let msg=`Several records match that request. You will need to be more specific. Are any of these what you wish to see?\n\n`;
+        for(const [type,names] of Object.entries(grouped)) msg+=`${type.toUpperCase()}:\n  ${names.join("\n  ")}\n\n`;
+        alert(msg + "The strands of knowledge weave too broadly. Tighter cords will reveal the correct thread.");
+      }else{
+        alert("No such scroll or tome can be located. You may wish to rephrase, or consult the Deep Archives... If access is permitted.");
+      }
+    },{capture:true});
+  }
+
+  function init(){
+    normalizeAnchors(document);
+    observeLateAdds();
+    patchSearch();
+    // console.log("BASE_PATH =", BASE_PATH); // uncomment to debug
+  }
+  if(document.readyState==="loading"){ document.addEventListener("DOMContentLoaded", init); } else { init(); }
+})();
 
 document.addEventListener('DOMContentLoaded', () => {
   // Smooth scroll to opened accordion
