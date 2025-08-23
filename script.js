@@ -1,7 +1,7 @@
 const searchIndex = [
   // NPCs
   { name: "Tharn Vellmor", type: "npc", path: "/npc-index/npc-pages/celestial-highlands/tharn-vellmor.html" },
-  { name: "Selene Vale", type: "npc", path: "/npc-index/npc-pages/celestial-highlands/selene-vale.html" },
+  { name: "Selene Vale", type: "npc", path: "npc-index/npc-pages/celestial-highlands/selene-vale.html" },
   { name: "Ilreth Solshade", type: "npc", path: "/npc-index/npc-pages/celestial-highlands/ilreth-solshade.html" },
   { name: "Yethryn Dorr", type: "npc", path: "/npc-index/npc-pages/celestial-highlands/yethryn-dorr.html" },
   { name: "Kaelen Duskwind", type: "npc", path: "/npc-index/npc-pages/twilight-isles/kaelen-duskwind.html" },
