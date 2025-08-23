@@ -134,127 +134,160 @@ const searchIndex = [
 })();
 
 (function () {
-  // 1) Figure out the correct site base.
-  function computeSiteBase() {
-    // If you explicitly set <base>, trust it.
-    const explicit = document.querySelector('base')?.getAttribute('href');
-    if (explicit) {
-      try { return new URL(explicit, location.origin).pathname.replace(/\/?$/, '/'); }
-      catch { /* fall through */ }
+  /** 1) Compute the site base path (e.g., "/REPO/" on GH Pages project sites) */
+  function computeBasePath() {
+    // If you ever want to hardcode it, set window.__BASE_PATH__ = "/YourRepo/";
+    if (typeof window.__BASE_PATH__ === "string") {
+      return ensureTrailingSlash(window.__BASE_PATH__);
     }
 
-    // Otherwise, derive from THIS script's src (most reliable on GH Pages).
-    const thisScript = document.currentScript || (function () {
-      const scripts = document.getElementsByTagName('script');
-      return scripts[scripts.length - 1];
-    })();
+    const host = location.hostname;
+    const parts = location.pathname.split("/").filter(Boolean);
 
-    try {
-      const u = new URL(thisScript.src, location.origin);
-      const parts = u.pathname.split('/').filter(Boolean);
-
-      // On GH Pages project sites, script path looks like: /REPO/assets/site.js
-      // On user/custom domain sites, it looks like: /assets/site.js
-      if (location.hostname.endsWith('github.io') && parts.length >= 2) {
-        // Treat the first segment as the repo name
-        return `/${parts[0]}/`;
-      }
-      // Otherwise, root
-      return '/';
-    } catch {
-      return '/';
+    // On GitHub Pages project sites every page path starts with /REPO/...
+    // Example: https://user.github.io/REPO/some/folder/page.html
+    if (host.endsWith("github.io") && parts.length > 0) {
+      // parts[0] === "REPO"
+      return `/${parts[0]}/`;
     }
+
+    // Custom domain or user/org root: just "/"
+    return "/";
   }
 
-  const SITE_BASE = computeSiteBase();              // e.g., "/REPO/" or "/"
-  const ORIGIN_BASE = location.origin + SITE_BASE;  // full base URL
+  function ensureTrailingSlash(p) {
+    return p.endsWith("/") ? p : p + "/";
+  }
 
-  // 2) Ensure a <base> tag so all relative paths resolve consistently.
-  (function ensureBaseTag() {
-    let base = document.querySelector('base');
-    if (!base) {
-      base = document.createElement('base');
-      document.head.prepend(base);
-    }
-    base.setAttribute('href', SITE_BASE);
-  })();
+  const BASE_PATH = computeBasePath();               // "/REPO/" or "/"
+  const ORIGIN_BASE = location.origin + BASE_PATH;   // "https://.../REPO/" or "https://.../"
 
-  // 3) Helpers to detect and normalize internal links.
-  function isInternal(href) {
+  /** 2) Turn any internal href into a full absolute URL under our BASE_PATH */
+  function isInternalHref(href) {
     if (!href) return false;
-    if (href.startsWith('#')) return false;
+    if (href.startsWith("#")) return false;
     if (/^(mailto:|tel:|javascript:)/i.test(href)) return false;
+    // external absolute
     if (/^https?:\/\//i.test(href)) {
       try { return new URL(href).origin === location.origin; }
       catch { return false; }
     }
-    return true;
+    return true; // relative or root-like -> internal
   }
 
-  function normalizeHref(raw) {
-    if (!raw) return raw;
-    // Map domain-root hrefs ("/...") to project root ("/REPO/...") on GH Pages.
-    if (raw === '/' || raw === './' || raw === './index.html') {
-      // Home variants → project root
+  function resolveFromSiteRoot(raw) {
+    // Special cases for "home"
+    if (raw === "/" || raw === "./" || raw === "./index.html" || raw === "index.html") {
       return ORIGIN_BASE;
     }
-    if (raw.startsWith('/')) {
+
+    // If the href starts with a domain-root "/", map it under BASE_PATH
+    if (raw.startsWith("/")) {
       return new URL(raw.slice(1), ORIGIN_BASE).href;
     }
-    // Resolve "./", "../", and plain relative paths against project base.
+
+    // Otherwise, resolve relative paths (./, ../, plain) against ORIGIN_BASE.
+    // new URL() will correctly collapse any "../" segments.
     return new URL(raw, ORIGIN_BASE).href;
   }
 
-  function normalizeAllAnchors(root = document) {
-    root.querySelectorAll?.('a[href]').forEach(a => {
-      const original = a.getAttribute('href'); // attribute value
-      if (!isInternal(original)) return;
+  /** 3) Normalize all <a> tags currently in DOM (navbar, dropdowns, etc.) */
+  function normalizeAnchors(root = document) {
+    root.querySelectorAll?.("a[href]").forEach(a => {
+      const original = a.getAttribute("href"); // attribute value
+      if (!isInternalHref(original)) return;
 
-      const fixed = normalizeHref(original);
-      // Only set if it actually changes the resolved destination
-      if (fixed && a.href !== fixed) a.setAttribute('href', fixed);
+      const fixed = resolveFromSiteRoot(original);
+      if (fixed && a.href !== fixed) {
+        a.setAttribute("href", fixed);
+      }
     });
   }
 
-  // 4) Run now and observe for late-added dropdown items.
-  function init() {
-    normalizeAllAnchors(document);
-    const observer = new MutationObserver(muts => {
+  /** 4) Observe late-added nodes (useful for dropdowns populated by JS) */
+  function startObserver() {
+    const mo = new MutationObserver(muts => {
       for (const m of muts) {
-        if (m.type === 'childList') {
+        if (m.type === "childList") {
           m.addedNodes.forEach(node => {
-            if (node.nodeType === 1) normalizeAllAnchors(node);
+            if (node.nodeType === 1) normalizeAnchors(node);
           });
-        } else if (m.type === 'attributes' && m.attributeName === 'href' && m.target.tagName === 'A') {
+        } else if (m.type === "attributes" && m.attributeName === "href" && m.target.tagName === "A") {
           const a = m.target;
-          const original = a.getAttribute('href');
-          if (isInternal(original)) {
-            const fixed = normalizeHref(original);
-            if (fixed && a.href !== fixed) a.setAttribute('href', fixed);
+          const original = a.getAttribute("href");
+          if (isInternalHref(original)) {
+            const fixed = resolveFromSiteRoot(original);
+            if (fixed && a.href !== fixed) a.setAttribute("href", fixed);
           }
         }
       }
     });
-    observer.observe(document.documentElement, {
+    mo.observe(document.documentElement, {
       childList: true,
       subtree: true,
       attributes: true,
-      attributeFilter: ['href'],
+      attributeFilter: ["href"],
     });
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+  /** 5) Patch your search redirect to use the same resolver */
+  function patchSearch() {
+    const form = document.querySelector("form[role='search']");
+    if (!form) return;
+    const input = form.querySelector("input[type='search']");
+    if (!input) return;
+
+    // We assume your searchIndex variable exists in this scope or global.
+    form.addEventListener("submit", function (e) {
+      // Only intercept if the handler hasn't already prevented default elsewhere
+      // (If your search already calls preventDefault, this is fine.)
+      e.preventDefault();
+      const q = (input.value || "").trim().toLowerCase();
+      if (!q || !Array.isArray(window.searchIndex)) return;
+
+      const matches = window.searchIndex.filter(({ name }) =>
+        String(name).toLowerCase().includes(q)
+      );
+
+      if (matches.length === 1) {
+        // IMPORTANT: resolve with our router, not raw path
+        location.href = resolveFromSiteRoot(matches[0].path);
+      } else if (matches.length > 1) {
+        const grouped = matches.reduce((acc, item) => {
+          (acc[item.type] ||= []).push(item.name);
+          return acc;
+        }, {});
+        let message = `Several records match that request. You will need to be more specific. Are any of these what you wish to see?\n\n`;
+        for (const [type, names] of Object.entries(grouped)) {
+          message += `${type.toUpperCase()}:\n  ${names.join("\n  ")}\n\n`;
+        }
+        alert(message + "The strands of knowledge weave too broadly. Tighter cords will reveal the correct thread.");
+      } else {
+        alert("No such scroll or tome can be located. You may wish to rephrase, or consult the Deep Archives... If access is permitted.");
+      }
+    }, { capture: true });
+  }
+
+  /** 6) JS helper you can call from onclick handlers: goto('path/to/page.html') */
+  window.goto = function (path) {
+    location.href = resolveFromSiteRoot(path);
+  };
+
+  /** 7) Init */
+  function init() {
+    normalizeAnchors(document);
+    startObserver();
+    patchSearch();
+    // Debug: uncomment to verify computed base
+    // console.log({ BASE_PATH, ORIGIN_BASE });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
   } else {
     init();
   }
-
-  // 5) Optional: JS navigation helper
-  window.goto = function (path) {
-    location.href = normalizeHref(path);
-  };
 })();
-
 
 document.addEventListener('DOMContentLoaded', () => {
   // Smooth scroll to opened accordion
